@@ -1,0 +1,144 @@
+<template>
+  <div class="container">
+    <stdHeader title="Notification" toPage="./accueilStd"/>
+      <v-row>
+        <v-col>
+          <v-text-field
+    placeholder="chercher notification"
+    filled
+    color="#666"
+    rounded
+    dense
+    class="search"
+    append-icon="mdi-magnify"
+  ></v-text-field>
+        </v-col>
+      </v-row>
+
+      <emptyArrays v-if="notifs.length === 0" 
+      message="Aucune notification disponible"
+      :source="imagePath"
+      />
+    <v-container grid-list-xs>
+      <v-row>
+        <v-col>
+          <div v-for="notif in notifs" :key="notif">
+          <h3 class="text-caption text-right"> {{ notif.timeStamp }}</h3>
+          <v-alert
+          
+      border="left"
+      outlined
+      :type="getAlertType(notif.message)"
+      text
+    >
+    <v-row>
+      {{ notif.message }}
+      <v-spacer></v-spacer>
+      <v-icon class="mr-3"
+      @click="deleteNotif(notif.id_Notification)"
+      :color="getAlertType(notif.message)"
+      >mdi-close-circle</v-icon>
+    </v-row>
+    </v-alert>
+    </div>
+        </v-col>
+      </v-row>
+    </v-container>
+  </div>
+</template>
+
+<script>
+import { mapState } from 'vuex'
+import api from '@/api.js';
+import stdHeader from "@/components/stdHeader.vue";
+import emptyArrays from '@/components/emptyArrays.vue';
+export default {
+    components:{
+      stdHeader,
+        emptyArrays,
+    },
+  data(){
+    return{
+      notifs :[],
+      imagePath: require('@/assets/empty/4.png'),
+    }
+  },
+  methods:{
+    getAlertType(message){
+      if (message.includes('accept')&&!message.includes('refus')) {
+        return 'success'
+      }
+      else if (message.includes('refus')&&!message.includes('accept')) {
+        return 'error'
+      }
+      else
+      return 'info'
+    },
+    async getNoitfs(){
+      try{
+       await api.post('/EtudNotif', {id:this.user.id_Etud})
+      .then(response => {
+        console.log(response)
+        this.notifs = response.data;
+
+      })
+    }
+    catch(error) {
+        console.log(error);
+      }
+    },
+
+    async seeNotifs(){
+      try{
+       await api.post('/seeStudentNotif', {id:this.user.id_Etud})
+      .then(response => {
+        console.log(response)
+      })
+    }catch(error) {
+        console.log(error);
+      }
+    },
+
+    async deleteNotif(idNo){
+      try{
+       await api.post('/suppNotif', {idN:idNo})
+       setTimeout(function() {
+            location.reload();
+        }, 200);
+       return true
+      }
+    catch(error) {
+        console.log(error);
+      }
+      
+    },
+
+  },
+computed:{
+  ...mapState(['userInfo']),
+  user() {
+      return JSON.parse(localStorage.getItem('user'));
+    }
+},
+  async mounted(){
+    await this.getNoitfs();
+  },
+  async created(){
+    await this.seeNotifs();
+  }
+}
+</script>
+
+<style scoped>
+
+.header{
+  font-size: 70px;
+  font-family:'Outfit';
+  color: #120030;
+}
+.header span{
+  color: #63D693;
+}
+
+
+</style>
