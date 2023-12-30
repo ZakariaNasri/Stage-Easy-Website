@@ -8,10 +8,6 @@
 
 [https://www.behance.net/gallery/172449067/Stage-Easy](https://www.behance.net/gallery/172449067/Stage-Easy)
 
-<h2>Project Screenshots:</h2>
-
-<img src="" alt="project-screenshot" width="400" height="400/">
-
   
   
 <h2>🧐 Features</h2>
