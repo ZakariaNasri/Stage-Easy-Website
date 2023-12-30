@@ -30,9 +30,6 @@ Here're some of the project's best features:
 <p>3. install Vuetify 2.0</p>
 
 <p>4. SQL</p>
-
-<p>5. enter to the project directory</p>
-
   
   
 <h2>💻 Built with</h2>
